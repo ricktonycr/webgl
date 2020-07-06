@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" >
+  <head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Script Tutorials" />
+    <title>WebGL With Three.js - Lesson 10 - Drag and Drop Objects | Script Tutorials</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="css/main.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <script src="js/three.min.71.js"></script>
+    <script src="js/THREEx.WindowResize.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script src="js/stats.min.js"></script>
+    <script src="js/script.js"></script>
+    <div style="margin: 0; padding: 0;width: 100%; display: flex;flex-direction: row;flex-wrap: nowrap;background-color: DodgerBlue;">
+      <div style="margin: 0; padding: 0;width: 50%; background-color: aqua;">
+        <div style="margin: 0; padding: 0;width: 100%; background-color:brown; display: flex; flex-wrap: wrap;" id="1">
+          <div style="background-color: #f1f1f1;width: 100px;margin: 10px;text-align: center;height: 75px;font-size: 30px;" draggable="true" id="12345" data-size="3.0" data-image-src="tree-01.png" ondragstart="drag(event)" >
+            <img src="tree-01.png" alt="palmera" style="width:50px;" draggable="false">
+          </div>
+          <div style="background-color: #f1f1f1;width: 100px;margin: 10px;text-align: center;height: 75px;font-size: 30px;" draggable="true" id="12346" data-size="2.0" data-image-src="tree-01.png" ondragstart="drag(event)" >
+            <img src="tree-01.png" alt="palmera" style="width:50px;" draggable="false">
+          </div>
+        </div>
+      </div>
+      <script>
+        function allowDrop(ev) {
+          ev.preventDefault();
+        }
+
+        function drag(ev) {
+          ev.dataTransfer.setData("text", ev.target.id);console.log(ev.target.id);
+        }
+
+        function drop(ev) {
+          ev.preventDefault();
+          var data = ev.dataTransfer.getData("text");
+          var o = document.getElementById(data);
+          data = o.getAttribute("data-image-src");
+          var size = o.getAttribute("data-size") + 0;
+          var object, material, radius;
+          
+          //var objGeometry = new THREE.BoxGeometry(10, 10, 1);
+          const loader = new THREE.TextureLoader();
+          const texture = loader.load(data, function(texture){console.log(objGeometry);
+            var h = texture.image.height;
+            var w = texture.image.width;
+            var z = size;
+            a = 10*z;
+            b = 10*z/h*w;
+            var objGeometry = new THREE.PlaneBufferGeometry(b, a, 8, 8);
+            material = new THREE.MeshPhongMaterial({color: 0xbbbbbb, map: texture,
+              alphaTest: 0.3,
+              transparent: true,
+              side: THREE.DoubleSide,});
+            material.transparent = true;
+            object = new THREE.Mesh(objGeometry.clone(), material);
+            lesson10.objects.push(object);
+
+            // object.position.x = Math.random() * 50 - 25;
+            // object.position.y = Math.random() * 50 - 25;
+            // object.position.z = 400;
+
+            lesson10.scene.add(object);
+          },function(xhr){console.log( (xhr.loaded / xhr.total * 100) + '% loaded' )},function(xhr){console.log( 'An error happened' );});
+        }
+      </script>
+      <div style="margin: 0; padding: 30px;width: 50%; background-color:beige; ">
+        <div id="container" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+      </div>
+    </div>
+  </body>
+</html>
