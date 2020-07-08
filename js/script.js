@@ -32,7 +32,8 @@ sbFragmentShader = [
 "}",
 ].join("\n");
 
-
+var click = false;
+var texto;
 var lesson10 = {
   scene: null, camera: null, renderer: null,
   container: null, controls: null,
@@ -67,6 +68,18 @@ var lesson10 = {
     // Prepare container
     this.container = document.getElementById('container');
     // document.body.appendChild(this.container);
+
+    texto = document.createElement("div");
+    texto.id = "text";
+    texto.innerHTML = "hola";
+    texto.style.position = "relative";
+    texto.style.top = "20px";
+    texto.style.left = "0px";
+    texto.style.height = "20px";
+    texto.style.width = "20px";
+    texto.style.backgroundColor = "#111";
+    texto.style.zIndex = -1000;
+    this.container.appendChild(texto);
     this.container.appendChild(this.renderer.domElement);
 
     // Events
@@ -151,6 +164,8 @@ var lesson10 = {
   },
   onDocumentMouseDown: function (event) {
     // Get mouse position
+    click = true;
+    texto.style.zIndex = -1000;
     var mouseX = (event.offsetX / ancho) * 2 - 1;
     var mouseY = -(event.offsetY / alto) * 2 + 1;
 
@@ -187,7 +202,7 @@ var lesson10 = {
   },
   onDocumentMouseMove: function (event) {
     event.preventDefault();
-
+    click = false;
     // Get mouse position
     var mouseX = (event.offsetX / ancho) * 2 - 1;
     var mouseY = -(event.offsetY / alto) * 2 + 1;
@@ -218,10 +233,36 @@ var lesson10 = {
   onDocumentMouseUp: function (event) {
     // Enable the controls
     // lesson10.controls.enabled = true;
-    console.log(max);
+    if(click && lesson10.selection){
+      var vector = lesson10.selection.position.clone();
+      var box = new THREE.Box3().setFromObject( lesson10.selection );
+      var a = Math.abs(box.max.x - box.min.x);
+      var b = Math.abs(box.max.y - box.min.y);
+      vector.x = box.min.x;
+      vector.y = box.min.y;
+      vector.project(lesson10.camera);
+      vector.x = ( vector.x + 1) * ancho / 2;
+      vector.y = - ( vector.y - 1) * alto / 2;
+      vector.z = 0;
+      texto.style.top = (vector.y + 20) + "px";
+      texto.style.left = vector.x + "px";
+      texto.style.zIndex = 1000;
+      var vector2 = lesson10.selection.position.clone();
+      vector2.x = box.max.x;
+      vector2.y = box.max.y;
+      vector2.project(lesson10.camera);
+      vector2.x = ( vector.x + 1) * ancho / 2;
+      vector2.y = - ( vector.y - 1) * alto / 2;
+      vector2.z = 0;
+      // texto.style.width = (vector2.x - vector.x) + "px";
+      texto.style.height = "60px";
+      console.log(box);
+      console.log(lesson10.renderer);
+    }
     if(lesson10.selection)
       lesson10.selection.position.z=max;
     lesson10.selection = null;
+
   }
 };
 
