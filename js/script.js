@@ -34,6 +34,12 @@ sbFragmentShader = [
 
 var click = false;
 var texto;
+var l;
+var t;
+var r;
+var x;
+var count = 0;
+var obj;
 var lesson10 = {
   scene: null, camera: null, renderer: null,
   container: null, controls: null,
@@ -70,16 +76,54 @@ var lesson10 = {
     // document.body.appendChild(this.container);
 
     texto = document.createElement("div");
+    l = document.createElement("div");
+    t = document.createElement("div");
+    r = document.createElement("div");
+    x = document.createElement("img");
+    x.src = "images/x.png";
+    x.style.zIndex = -1000;
+    x.onclick = function(){
+      var i;
+      var element;
+      for (i = 0; i < lesson10.objects.length; i++) {
+        element = lesson10.objects[i];
+        if(element.personalID = obj.personalID)
+          break;
+      }
+      console.log(element.personalID);
+      element.geometry.dispose();
+      element.material.dispose();
+      lesson10.scene.remove( element );
+      animate();
+      lesson10.objects.splice(i,1);
+      texto.style.zIndex = -1000;
+      l.style.zIndex = -1000;
+      t.style.zIndex = -1000;
+      r.style.zIndex = -1000;
+      x.style.zIndex = -1000;
+    };
     texto.id = "text";
     texto.innerHTML = "hola";
-    texto.style.position = "relative";
-    texto.style.top = "20px";
-    texto.style.left = "0px";
-    texto.style.height = "20px";
-    texto.style.width = "20px";
+    texto.style.position = "absolute";
+    l.style.position = "absolute";
+    t.style.position = "absolute";
+    r.style.position = "absolute";
+    x.style.position = "absolute";
+    texto.style.color = "white";
     texto.style.backgroundColor = "#111";
+    l.style.backgroundColor = "#111";
+    t.style.backgroundColor = "#111";
+    r.style.backgroundColor = "#111";
     texto.style.zIndex = -1000;
+    l.style.zIndex = -1000;
+    t.style.zIndex = -1000;
+    r.style.zIndex = -1000;
+    x.style.zIndex = -1000;
     this.container.appendChild(texto);
+    this.container.appendChild(l);
+    this.container.appendChild(t);
+    this.container.appendChild(r);
+    this.container.appendChild(x);
     this.container.appendChild(this.renderer.domElement);
 
     // Events
@@ -166,6 +210,11 @@ var lesson10 = {
     // Get mouse position
     click = true;
     texto.style.zIndex = -1000;
+    l.style.zIndex = -1000;
+    r.style.zIndex = -1000;
+    t.style.zIndex = -1000;
+    x.style.zIndex = -1000;
+    obj = null;
     var mouseX = (event.offsetX / ancho) * 2 - 1;
     var mouseY = -(event.offsetY / alto) * 2 + 1;
 
@@ -234,6 +283,7 @@ var lesson10 = {
     // Enable the controls
     // lesson10.controls.enabled = true;
     if(click && lesson10.selection){
+      obj = lesson10.selection;
       var vector = lesson10.selection.position.clone();
       var box = new THREE.Box3().setFromObject( lesson10.selection );
       var a = Math.abs(box.max.x - box.min.x);
@@ -244,20 +294,41 @@ var lesson10 = {
       vector.x = ( vector.x + 1) * ancho / 2;
       vector.y = - ( vector.y - 1) * alto / 2;
       vector.z = 0;
-      texto.style.top = (vector.y + 20) + "px";
-      texto.style.left = vector.x + "px";
+      texto.style.top = (vector.y + lesson10.renderer.domElement.getBoundingClientRect().top + 5) + "px";
+      texto.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left - 10) + "px";
       texto.style.zIndex = 1000;
       var vector2 = lesson10.selection.position.clone();
       vector2.x = box.max.x;
       vector2.y = box.max.y;
       vector2.project(lesson10.camera);
-      vector2.x = ( vector.x + 1) * ancho / 2;
-      vector2.y = - ( vector.y - 1) * alto / 2;
+      vector2.x = ( vector2.x + 1) * ancho / 2;
+      vector2.y = - ( vector2.y - 1) * alto / 2;
       vector2.z = 0;
-      // texto.style.width = (vector2.x - vector.x) + "px";
-      texto.style.height = "60px";
+      texto.style.width = (vector2.x - vector.x + 20) + "px";
+      texto.style.height = "auto";
+
+      l.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left - 10) + "px";
+      l.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top + vector2.y - 5) + "px";
+      l.style.width = "5px";
+      l.style.height = (vector.y - vector2.y + 10) + "px";
+      l.style.zIndex = 999;
+      t.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left - 10) + "px";
+      t.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 10) + "px";
+      t.style.height = "5px";
+      t.style.width = (vector2.x - vector.x + 20) + "px";
+      t.style.zIndex = 999;
+      r.style.left = (lesson10.renderer.domElement.getBoundingClientRect().left + vector2.x + 5) + "px";
+      r.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 5) + "px";
+      r.style.height = (vector.y - vector2.y + 10) + "px";
+      r.style.width = "5px";
+      r.style.zIndex = 999;
+      x.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 20) + "px";
+      x.style.left = (lesson10.renderer.domElement.getBoundingClientRect().left + vector2.x - 5) + "px";
+      x.style.width = "30px";
+      x.style.height = "30px";
+      x.style.zIndex = 1001;
       console.log(box);
-      console.log(lesson10.renderer);
+      console.log(lesson10.renderer.domElement.getBoundingClientRect());
     }
     if(lesson10.selection)
       lesson10.selection.position.z=max;

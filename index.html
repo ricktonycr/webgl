@@ -19,6 +19,9 @@
           <div style="background-color: #f1f1f1;width: 100px;margin: 10px;text-align: center;height: 75px;font-size: 30px;" draggable="true" id="12345" data-size="3.0" data-image-src="images/s1.png" ondragstart="drag(event)" >
             <img src="images/s1.png" alt="palmera" style="width:50px;" draggable="false">
           </div>
+          <div style="background-color: #f1f1f1;width: 100px;margin: 10px;text-align: center;height: 75px;font-size: 30px;" draggable="true" id="1234" data-size="3.0" data-image-src="images/s2.png" ondragstart="drag(event)" >
+            <img src="images/s2.png" alt="palmera" style="width:50px;" draggable="false">
+          </div>
           <div style="background-color: #f1f1f1;width: 100px;margin: 10px;text-align: center;height: 75px;font-size: 30px;" draggable="true" id="12346" data-size="5.0" data-image-src="images/a1.png" ondragstart="drag(event)" >
             <img src="images/a1.png" alt="palmera" style="width:50px;" draggable="false">
           </div>
@@ -56,6 +59,9 @@
               side: THREE.DoubleSide,});
             material.transparent = true;
             object = new THREE.Mesh(objGeometry.clone(), material);
+            count = count + 1;
+            console.log(count);
+            object.personalID = count;
             lesson10.objects.push(object);
 
             // object.position.x = Math.random() * 50 - 25;
