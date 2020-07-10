@@ -40,6 +40,13 @@ var r;
 var x;
 var count = 0;
 var obj;
+var nameO;
+var size;
+var price;
+var option1;
+var option2;
+var option3;
+var selected=0;
 var lesson10 = {
   scene: null, camera: null, renderer: null,
   container: null, controls: null,
@@ -67,15 +74,24 @@ var lesson10 = {
     this.camera.lookAt(new THREE.Vector3(0,0,0));
 
     // Prepare webgl renderer
-    this.renderer = new THREE.WebGLRenderer({ antialias:true });
+    this.renderer = new THREE.WebGLRenderer({ alpha: true,antialias:true });
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-    this.renderer.setClearColor(this.scene.fog.color);
+    this.renderer.setClearColor("#ffffff");
 
     // Prepare container
     this.container = document.getElementById('container');
     // document.body.appendChild(this.container);
 
     texto = document.createElement("div");
+    nameO  = document.createElement("p");
+    size  = document.createElement("p");
+    price = document.createElement("p");
+    option1 = document.createElement("img");
+    option2 = document.createElement("img");
+    option3 = document.createElement("img");
+    texto.appendChild(nameO);
+    texto.appendChild(size);
+    texto.appendChild(price);
     l = document.createElement("div");
     t = document.createElement("div");
     r = document.createElement("div");
@@ -87,13 +103,14 @@ var lesson10 = {
       var element;
       for (i = 0; i < lesson10.objects.length; i++) {
         element = lesson10.objects[i];
-        if(element.personalID = obj.personalID)
+        if(element.data.personalID == obj.data.personalID){
           break;
+        }
       }
-      console.log(element.personalID);
-      element.geometry.dispose();
-      element.material.dispose();
-      lesson10.scene.remove( element );
+      
+      obj.geometry.dispose();
+      obj.material.dispose();
+      lesson10.scene.remove( obj );
       animate();
       lesson10.objects.splice(i,1);
       texto.style.zIndex = -1000;
@@ -101,14 +118,62 @@ var lesson10 = {
       t.style.zIndex = -1000;
       r.style.zIndex = -1000;
       x.style.zIndex = -1000;
+      option1.style.zIndex = -1000;
+      option2.style.zIndex = -1000;
+      option3.style.zIndex = -1000;
     };
+
+    option1.onclick = function(){
+      if(selected != 1){
+        var nSrc = obj.data.url1;
+        tx = THREE.ImageUtils.loadTexture( nSrc );
+        tx.minFilter = THREE.LinearFilter;
+        obj.material.map = tx;
+        obj.material.needsUpdate = true;
+        option1.style.borderColor = "white";
+        option2.style.borderColor = "#111111";
+        option3.style.borderColor = "#111111";
+        selected = 1;
+      }
+    }
+
+    option2.onclick = function(){
+      if(selected != 2){
+        var nSrc = obj.data.url2;
+        tx = THREE.ImageUtils.loadTexture( nSrc );
+        tx.minFilter = THREE.LinearFilter;
+        obj.material.map = tx;
+        obj.material.needsUpdate = true;
+        option2.style.borderColor = "white";
+        option1.style.borderColor = "#111111";
+        option3.style.borderColor = "#111111";
+        selected = 2;
+      }
+    }
+
+    option3.onclick = function(){
+      if(selected != 3){
+        var nSrc = obj.data.url3;
+        tx = THREE.ImageUtils.loadTexture( nSrc );
+        tx.minFilter = THREE.LinearFilter;
+        obj.material.map = tx;
+        obj.material.needsUpdate = true;
+        option3.style.borderColor = "white";
+        option2.style.borderColor = "#111111";
+        option1.style.borderColor = "#111111";
+        selected = 3;
+      }
+    }
+
     texto.id = "text";
-    texto.innerHTML = "hola";
     texto.style.position = "absolute";
     l.style.position = "absolute";
     t.style.position = "absolute";
     r.style.position = "absolute";
     x.style.position = "absolute";
+    option1.style.position = "absolute";
+    option2.style.position = "absolute";
+    option3.style.position = "absolute";
     texto.style.color = "white";
     texto.style.backgroundColor = "#111";
     l.style.backgroundColor = "#111";
@@ -119,11 +184,17 @@ var lesson10 = {
     t.style.zIndex = -1000;
     r.style.zIndex = -1000;
     x.style.zIndex = -1000;
+    option1.style.zIndex = -1000;
+    option2.style.zIndex = -1000;
+    option3.style.zIndex = -1000;
     this.container.appendChild(texto);
     this.container.appendChild(l);
     this.container.appendChild(t);
     this.container.appendChild(r);
     this.container.appendChild(x);
+    this.container.appendChild(option1);
+    this.container.appendChild(option2);
+    this.container.appendChild(option3);
     this.container.appendChild(this.renderer.domElement);
 
     // Events
@@ -214,7 +285,11 @@ var lesson10 = {
     r.style.zIndex = -1000;
     t.style.zIndex = -1000;
     x.style.zIndex = -1000;
+    option1.style.zIndex = -1000;
+    option2.style.zIndex = -1000;
+    option3.style.zIndex = -1000;
     obj = null;
+
     var mouseX = (event.offsetX / ancho) * 2 - 1;
     var mouseY = -(event.offsetY / alto) * 2 + 1;
 
@@ -252,7 +327,17 @@ var lesson10 = {
   onDocumentMouseMove: function (event) {
     event.preventDefault();
     click = false;
-    // Get mouse position
+    
+    if(event.offsetX < 30 || event.offsetY < 30){
+      lesson10.selection = null;
+      return;
+    }
+    if(event.offsetX > (ancho - 30) || event.offsetY > (alto - 30)){
+      lesson10.selection = null;
+      return;
+    }
+    
+      // Get mouse position
     var mouseX = (event.offsetX / ancho) * 2 - 1;
     var mouseY = -(event.offsetY / alto) * 2 + 1;
 
@@ -268,6 +353,7 @@ var lesson10 = {
       // Reposition the object based on the intersection point with the plane
       lesson10.selection.position.copy(intersects[0].point.sub(lesson10.offset));
       lesson10.selection.position.z=max;
+      // render();
       // console.log(max);
     } else {
       // Update position of the plane if need
@@ -327,8 +413,49 @@ var lesson10 = {
       x.style.width = "30px";
       x.style.height = "30px";
       x.style.zIndex = 1001;
-      console.log(box);
-      console.log(lesson10.renderer.domElement.getBoundingClientRect());
+
+      nameO.innerHTML = obj.data.name;
+      size.innerHTML = obj.data.mesures;
+      price.innerHTML = "S/. " + obj.data.price;
+
+      if(obj.data.url1.length != 0){
+        option1.src = obj.data.url1;
+        option1.style.width = "40px";
+        option1.style.height = "40px";
+        option1.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 60) + "px";;
+        option1.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left - 10) + "px";;
+        option1.style.zIndex = 1000;
+        option1.style.backgroundColor = "white";
+        option1.style.borderStyle = "solid";
+        option1.style.borderWidth = "2px";
+        option1.style.borderColor = "white";
+      }
+
+      if(obj.data.url2.length != 0){
+        option2.src = obj.data.url2;
+        option2.style.width = "40px";
+        option2.style.height = "40px";
+        option2.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 60) + "px";;
+        option2.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left + 40) + "px";;
+        option2.style.zIndex = 1000;
+        option2.style.backgroundColor = "white";
+        option2.style.borderStyle = "solid";
+        option2.style.borderWidth = "2px";
+        option2.style.borderColor = "#111111";
+      }
+
+      if(obj.data.url3.length != 0){
+        option3.src = obj.data.url3;
+        option3.style.width = "40px";
+        option3.style.height = "40px";
+        option3.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 60) + "px";;
+        option3.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left + 90) + "px";;
+        option3.style.zIndex = 1000;
+        option3.style.backgroundColor = "white";
+        option3.style.borderStyle = "solid";
+        option3.style.borderWidth = "2px";
+        option3.style.borderColor = "#111111";
+      }
     }
     if(lesson10.selection)
       lesson10.selection.position.z=max;

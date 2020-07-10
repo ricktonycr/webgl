@@ -16,14 +16,37 @@
     <div style="margin: 0; padding: 0;width: 100%; display: flex;flex-direction: row;flex-wrap: nowrap;background-color: DodgerBlue;">
       <div style="margin: 0; padding: 0;width: 50%; background-color: aqua;">
         <div style="margin: 0; padding: 0;width: 100%; background-color:brown; display: flex; flex-wrap: wrap;" id="1">
-          <div style="background-color: #f1f1f1;width: 100px;margin: 10px;text-align: center;height: 75px;font-size: 30px;" draggable="true" id="12345" data-size="3.0" data-image-src="images/s1.png" ondragstart="drag(event)" >
+          <div style="background-color: #f1f1f1;width: 100px;margin: 10px;text-align: center;max-width: 100px;font-size: 30px;" draggable="true" 
+            id="12345" 
+            data-size="4.0" 
+            data-url1="images/s1.png"
+            data-url2="images/s2.png"
+            data-url3="images/s3.png"
+            data-name="silla"
+            data-price="1890,00"
+            data-mesures="80cm x 74cm x 70cm "
+            data-y="20"
+            data-z="30"
+            ondragstart="drag(event)" >
             <img src="images/s1.png" alt="palmera" style="width:50px;" draggable="false">
+            <p>Silla 1</p>
+            <p>S/. 200</p>
           </div>
-          <div style="background-color: #f1f1f1;width: 100px;margin: 10px;text-align: center;height: 75px;font-size: 30px;" draggable="true" id="1234" data-size="3.0" data-image-src="images/s2.png" ondragstart="drag(event)" >
-            <img src="images/s2.png" alt="palmera" style="width:50px;" draggable="false">
-          </div>
-          <div style="background-color: #f1f1f1;width: 100px;margin: 10px;text-align: center;height: 75px;font-size: 30px;" draggable="true" id="12346" data-size="5.0" data-image-src="images/a1.png" ondragstart="drag(event)" >
-            <img src="images/a1.png" alt="palmera" style="width:50px;" draggable="false">
+          <div style="background-color: #f1f1f1;width: 100px;margin: 10px;text-align: center;max-width: 100px;font-size: 30px;" draggable="true" 
+            id="12346" 
+            data-size="3.0" 
+            data-url1="images/sl1.png"
+            data-url2="images/sl2.png"
+            data-url3="images/sl3.png"
+            data-name="Sillón"
+            data-price="1890,00"
+            data-mesures="80cm x 74cm x 70cm "
+            data-y="20"
+            data-z="30"
+            ondragstart="drag(event)" >
+            <img src="images/sl1.png" alt="palmera" style="width:50px;" draggable="false">
+            <p>Sillón</p>
+            <p>S/. 200</p>
           </div>
         </div>
       </div>
@@ -38,32 +61,41 @@
 
         function drop(ev) {
           ev.preventDefault();
-          var data = ev.dataTransfer.getData("text");
-          var o = document.getElementById(data);
-          data = o.getAttribute("data-image-src");
-          var size = o.getAttribute("data-size") + 0;
+          var data = {};
+          var Oid = ev.dataTransfer.getData("text");
+          var o = document.getElementById(Oid);
+          data.url1 = o.getAttribute("data-url1");
+          data.url2 = o.getAttribute("data-url2");
+          data.url3 = o.getAttribute("data-url3");
+          data.size = 0 + o.getAttribute("data-size");
+          data.name = o.getAttribute("data-name");
+          data.price = o.getAttribute("data-price");
+          data.mesures = o.getAttribute("data-mesures");
+          data.personalID = 0;
           var object, material, radius;
           
           //var objGeometry = new THREE.BoxGeometry(10, 10, 1);
           const loader = new THREE.TextureLoader();
-          const texture = loader.load(data, function(texture){console.log(objGeometry);
+          const texture = loader.load(data.url1, function(texture){
             var h = texture.image.height;
             var w = texture.image.width;
-            var z = size;
+            var z = data.size;
+            texture.minFilter = THREE.LinearFilter;
             a = 10*z;
             b = 10*z/h*w;
             var objGeometry = new THREE.PlaneBufferGeometry(b, a, 8, 8);
-            material = new THREE.MeshPhongMaterial({color: 0xbbbbbb, map: texture,
-              alphaTest: 0.3,
+            material = new THREE.MeshPhongMaterial({color: 0x777777, map: texture,
+              alphaTest: 0.2,
               transparent: true,
-              side: THREE.DoubleSide,});
+              side: THREE.DoubleSide});
             material.transparent = true;
             object = new THREE.Mesh(objGeometry.clone(), material);
             count = count + 1;
-            console.log(count);
-            object.personalID = count;
+            object.data = data;
+            object.data.personalID = count;
             lesson10.objects.push(object);
-
+            // object.scale.x = 1.5;
+            // object.scale.y = 1.5;
             // object.position.x = Math.random() * 50 - 25;
             // object.position.y = Math.random() * 50 - 25;
             // object.position.z = 400;
