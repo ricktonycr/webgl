@@ -337,7 +337,7 @@ var lesson10 = {
       return;
     }
     
-      // Get mouse position
+    // Get mouse position
     var mouseX = (event.offsetX / ancho) * 2 - 1;
     var mouseY = -(event.offsetY / alto) * 2 + 1;
 

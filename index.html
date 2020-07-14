@@ -131,6 +131,22 @@
           <div style="background-color: #f1f1f1;width: 100px;margin: 10px;text-align: center;max-width: 100px;font-size: 30px;" draggable="true" 
             id="113" 
             data-size="4.0" 
+            data-url1="images/sofa1.png"
+            data-url2="images/sl2.png"
+            data-url3="images/sl3.png"
+            data-name="Sofa"
+            data-price="1890,00"
+            data-mesures="80cm x 74cm x 70cm "
+            data-y="20"
+            data-z="30"
+            ondragstart="drag(event)" >
+            <img id="11300" src="images/sofa1.png" alt="palmera" style="width:70px;" draggable="false">
+            <p>Sofa</p>
+            <p>S/. 200</p>
+          </div>
+          <div style="background-color: #f1f1f1;width: 100px;margin: 10px;text-align: center;max-width: 100px;font-size: 30px;" draggable="true" 
+            id="114" 
+            data-size="4.0" 
             data-url1="images/sofa.png"
             data-url2="images/sl2.png"
             data-url3="images/sl3.png"
@@ -140,7 +156,7 @@
             data-y="20"
             data-z="30"
             ondragstart="drag(event)" >
-            <img src="images/sofa.png" alt="palmera" style="width:50px;" draggable="false">
+            <img id="11400" src="images/sofa.png" alt="palmera" style="width:70px;" draggable="false">
             <p>Sofa</p>
             <p>S/. 200</p>
           </div>
@@ -152,10 +168,44 @@
         }
 
         function drag(ev) {
+          var q = document.getElementById(ev.target.id+"00");
+
+          var canvas = document.createElement("canvas");
+          canvas.width = 1024;
+          canvas.height = 512;
+
+          // Copy the image contents to the canvas
+          var ctx = canvas.getContext("2d");
+          ctx.drawImage(q, 0, 0);
+
+          // Get the data-URL formatted image
+          // Firefox supports PNG and JPEG. You could check img.src to
+          // guess the original format, but be aware the using "image/jpg"
+          // will re-encode the image.
+          var dataURL = canvas.toDataURL("image/png");
+
+          var dragIcon = document.createElement('img');
+          dragIcon.src = dataURL;
+          dragIcon.width = '200';
+          var div = document.createElement('div');
+          div.appendChild(dragIcon);
+          document.querySelector('body').appendChild(div);
+          ev.dataTransfer.setDragImage(q,100,50);
           ev.dataTransfer.setData("text", ev.target.id);console.log(ev.target.id);
         }
 
         function drop(ev) {
+          // Get mouse position
+          var mouseX = (ev.offsetX / ancho) * 2 - 1;
+          var mouseY = -(ev.offsetY / alto) * 2 + 1;
+
+
+          var mouse = new THREE.Vector2();
+          mouse.x = mouseX;
+          mouse.y = mouseY;
+          lesson10.raycaster.setFromCamera( mouse, lesson10.camera );
+          var intersects = lesson10.raycaster.intersectObject(lesson10.plane);
+
           ev.preventDefault();
           var data = {};
           var Oid = ev.dataTransfer.getData("text");
@@ -181,7 +231,7 @@
             a = 10*z;
             b = 10*z/h*w;
             var objGeometry = new THREE.PlaneBufferGeometry(b, a, 8, 8);
-            material = new THREE.MeshPhongMaterial({color: 0xaaaaaa, map: texture,
+            material = new THREE.MeshPhongMaterial({color: 0x999999, map: texture,
               alphaTest: 0.1,
               transparent: true,
               side: THREE.DoubleSide});
@@ -190,6 +240,19 @@
             count = count + 1;
             object.data = data;
             object.data.personalID = count;
+
+            object.position.copy(intersects[0].point);
+
+            max = 0;
+            for (let index = 0; index < lesson10.objects.length; index++) {
+              const element = lesson10.objects[index];
+              if(element.position.z > max){
+                max = element.position.z;
+              } 
+            }
+            max = max + 1;
+            object.position.z = max;
+            console.log(object.position);
             lesson10.objects.push(object);
             // object.scale.x = 1.5;
             // object.scale.y = 1.5;
