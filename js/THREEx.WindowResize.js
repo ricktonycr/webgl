@@ -16,8 +16,8 @@
 
 /** @namespace */
 var THREEx	= THREEx 		|| {};
-const ancho = 800;
-const alto  = 500;
+const ancho = 1024;
+const alto  = 512;
 
 /**
  * Update renderer and camera when the window is resized

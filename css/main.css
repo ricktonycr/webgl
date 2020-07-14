@@ -5,3 +5,31 @@
 html {
   overflow: hidden;
 }
+
+.ItemImage{
+  max-width: 100px;
+  height: auto;
+  max-height: 120px;
+}
+
+.ItemDiv{
+  width: 150px;
+  margin: 10px;
+  text-align: center;
+}
+
+.OverImg{
+  background-color: white;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.OverText{
+  background-color: transparent;
+  color: #797979;
+  font-size: 18px;
+  text-align: left;
+}

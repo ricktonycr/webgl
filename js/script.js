@@ -227,13 +227,13 @@ var lesson10 = {
     this.camera.add(dirLight);
     this.camera.add(dirLight.target);
 
-    // Display skybox
-    this.addSkybox();
 
     // Plane, that helps to determinate an intersection position
-    this.plane = new THREE.Mesh(new THREE.PlaneBufferGeometry(2000, 2000, 8, 8), new THREE.MeshBasicMaterial({color: 0xffffff}));
-    this.plane.visible = false;
+    this.plane = new THREE.Mesh(new THREE.PlaneBufferGeometry(2000, 2000, 1, 1), new THREE.MeshBasicMaterial({color: 0xffffff}));
+    this.plane.visible = true;
     this.scene.add(this.plane); 
+
+    this.reusableTarget = new THREE.WebGLRenderTarget(1, 1);
 
 
     // Add 100 random objects (spheres)
@@ -241,6 +241,8 @@ var lesson10 = {
     //var objGeometry = new THREE.BoxGeometry(10, 10, 1);
     var objGeometry = new THREE.PlaneBufferGeometry(10, 10, 8, 8);
     const loader = new THREE.TextureLoader();
+
+    
     /*
     for (var i = 0; i < 10; i++) {
       const texture = loader.load('tree-01.png', function(texture){console.log(texture);
@@ -264,18 +266,6 @@ var lesson10 = {
       lesson10.scene.add(object);},function(xhr){console.log( (xhr.loaded / xhr.total * 100) + '% loaded' )},function(xhr){console.log( 'An error happened' );});
     }*/
 
-  },
-  addSkybox: function() {
-    var iSBrsize = 500;
-    var uniforms = {
-      topColor: {type: "c", value: new THREE.Color(0x0077ff)}, bottomColor: {type: "c", value: new THREE.Color(0xffffff)},
-      offset: {type: "f", value: iSBrsize}, exponent: {type: "f", value: 1.5}
-    }
-
-    var skyGeo = new THREE.SphereGeometry(iSBrsize, 32, 32);
-    skyMat = new THREE.ShaderMaterial({vertexShader: sbVertexShader, fragmentShader: sbFragmentShader, uniforms: uniforms, side: THREE.DoubleSide, fog: false});
-    skyMesh = new THREE.Mesh(skyGeo, skyMat);
-    //this.scene.add(skyMesh);
   },
   onDocumentMouseDown: function (event) {
     // Get mouse position
@@ -322,6 +312,19 @@ var lesson10 = {
       // Calculate the offset
       var intersects = lesson10.raycaster.intersectObject(lesson10.plane);
       lesson10.offset.copy(intersects[0].point).sub(lesson10.plane.position);
+
+      lesson10.plane.position.z = max-0.5;
+      // inside your mouse event...
+      const rt = new THREE.WebGLRenderTarget(ancho, alto);
+      lesson10.renderer.render(lesson10.scene, lesson10.camera, rt);
+
+      // w/h: width/height of the region to read
+      // x/y: bottom-left corner of that region
+      const buffer = new Uint8Array(1 * 1 * 4);
+      lesson10.renderer.readRenderTargetPixels(rt, event.offsetX , alto - event.offsetY, 1, 1, buffer);
+      console.log(buffer);
+      if(buffer[0]==255&&buffer[1]==255&&buffer[2]==255&&buffer[0]==255)
+        console.log("afuera");
     }
   },
   onDocumentMouseMove: function (event) {
@@ -360,7 +363,8 @@ var lesson10 = {
       var intersects = lesson10.raycaster.intersectObjects(lesson10.objects);
       if (intersects.length > 0) {
         lesson10.plane.position.copy(intersects[0].object.position);
-        var v = new THREE.Vector3(0,0,100000);
+        var v = intersects[0].object.position;
+        v.z = 0;
         lesson10.plane.lookAt(v);
       }
     }
