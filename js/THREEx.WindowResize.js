@@ -16,8 +16,8 @@
 
 /** @namespace */
 var THREEx	= THREEx 		|| {};
-const ancho = 1024;
-const alto  = 512;
+var ancho = 1024;
+var alto  = 512;
 
 /**
  * Update renderer and camera when the window is resized
@@ -27,6 +27,10 @@ const alto  = 512;
 */
 THREEx.WindowResize	= function(renderer, camera){
 	var callback	= function(){
+		var cont = document.getElementById("container");
+		ancho = cont.offsetWidth;
+		alto = cont.offsetHeight;
+		console.log(alto);
 		// notify the renderer of the size change
 		renderer.setSize( ancho, alto );
 		// update the camera

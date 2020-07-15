@@ -74,7 +74,7 @@ var lesson10 = {
     this.camera.lookAt(new THREE.Vector3(0,0,0));
 
     // Prepare webgl renderer
-    this.renderer = new THREE.WebGLRenderer({ alpha: true,antialias:true });
+    this.renderer = new THREE.WebGLRenderer({ alpha: true,antialias:true,preserveDrawingBuffer: true });
     this.renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     this.renderer.setClearColor("#ffffff");
 
@@ -230,8 +230,20 @@ var lesson10 = {
 
     // Plane, that helps to determinate an intersection position
     this.plane = new THREE.Mesh(new THREE.PlaneBufferGeometry(2000, 2000, 1, 1), new THREE.MeshBasicMaterial({color: 0xffffff}));
-    this.plane.visible = true;
-    this.scene.add(this.plane); 
+    this.plane.visible = false;
+    this.scene.add(this.plane);
+
+    this.upPlane = new THREE.Mesh(new THREE.PlaneBufferGeometry(2000, 2000, 1, 1), new THREE.MeshBasicMaterial({color: 0x707F91}));
+    this.upPlane.visible = true;
+    this.upPlane.position.z = 2;
+    this.upPlane.position.y = 1000;
+    this.scene.add(this.upPlane);
+
+    this.downPlane = new THREE.Mesh(new THREE.PlaneBufferGeometry(2000, 2000, 1, 1), new THREE.MeshBasicMaterial({color: 0xffffff}));
+    this.downPlane.visible = true;
+    this.downPlane.position.z = 2;
+    this.downPlane.position.y = -1000;
+    this.scene.add(this.downPlane);
 
     this.reusableTarget = new THREE.WebGLRenderTarget(1, 1);
 
@@ -241,30 +253,6 @@ var lesson10 = {
     //var objGeometry = new THREE.BoxGeometry(10, 10, 1);
     var objGeometry = new THREE.PlaneBufferGeometry(10, 10, 8, 8);
     const loader = new THREE.TextureLoader();
-
-    
-    /*
-    for (var i = 0; i < 10; i++) {
-      const texture = loader.load('tree-01.png', function(texture){console.log(texture);
-      material = new THREE.MeshPhongMaterial({color: Math.random() * 0xffffff, map: texture,
-        alphaTest: 0.3,
-        transparent: true,
-        side: THREE.DoubleSide,});
-      material.transparent = true;
-      object = new THREE.Mesh(objGeometry.clone(), material);
-      lesson10.objects.push(object);
-
-      radius = Math.random() * 4 + 2;
-      object.scale.x = radius;
-      object.scale.y = radius;
-      object.scale.z = radius;
-
-      object.position.x = Math.random() * 50 - 25;
-      object.position.y = Math.random() * 50 - 25;
-      object.position.z = i;
-
-      lesson10.scene.add(object);},function(xhr){console.log( (xhr.loaded / xhr.total * 100) + '% loaded' )},function(xhr){console.log( 'An error happened' );});
-    }*/
 
   },
   onDocumentMouseDown: function (event) {
@@ -313,18 +301,6 @@ var lesson10 = {
       var intersects = lesson10.raycaster.intersectObject(lesson10.plane);
       lesson10.offset.copy(intersects[0].point).sub(lesson10.plane.position);
 
-      lesson10.plane.position.z = max-0.5;
-      // inside your mouse event...
-      const rt = new THREE.WebGLRenderTarget(ancho, alto);
-      lesson10.renderer.render(lesson10.scene, lesson10.camera, rt);
-
-      // w/h: width/height of the region to read
-      // x/y: bottom-left corner of that region
-      const buffer = new Uint8Array(1 * 1 * 4);
-      lesson10.renderer.readRenderTargetPixels(rt, event.offsetX , alto - event.offsetY, 1, 1, buffer);
-      console.log(buffer);
-      if(buffer[0]==255&&buffer[1]==255&&buffer[2]==255&&buffer[0]==255)
-        console.log("afuera");
     }
   },
   onDocumentMouseMove: function (event) {
@@ -363,8 +339,9 @@ var lesson10 = {
       var intersects = lesson10.raycaster.intersectObjects(lesson10.objects);
       if (intersects.length > 0) {
         lesson10.plane.position.copy(intersects[0].object.position);
+        lesson10.plane.position.z = 0;
         var v = intersects[0].object.position;
-        v.z = 0;
+        // v.z = 0;
         lesson10.plane.lookAt(v);
       }
     }
@@ -496,8 +473,60 @@ function initializeLesson() {
   animate();
 }
 
+function compartir(){
+  var imgData, imgNode;
+  try {
+    var strMime = "image/jpeg";
+    imgData = lesson10.renderer.domElement.toDataURL(strMime);
+
+    saveFile(imgData.replace(strMime, "image/octet-stream"), "disenio.jpg");
+
+  } catch (e) {
+    console.log(e);
+    return;
+  }
+}
+
+var saveFile = function (strData, filename) {
+  var link = document.createElement('a');
+  if (typeof link.download === 'string') {
+    document.body.appendChild(link); //Firefox requires the link to be in the body
+    link.download = filename;
+    link.href = strData;
+    link.click();
+    document.body.removeChild(link); //remove the link when done
+  } else {
+    location.replace(uri);
+  }
+}
+
 if (window.addEventListener)
   window.addEventListener('load', initializeLesson, false);
 else if (window.attachEvent)
   window.attachEvent('onload', initializeLesson);
 else window.onload = initializeLesson;
+
+
+function round1(){
+  var color = document.getElementById("UpColor");
+  color.click();
+}
+
+function round2(){
+  var color = document.getElementById("DownColor");
+  color.click();
+}
+
+function change1(){
+  var color = document.getElementById("UpColor");
+  var round = document.getElementById("round1");
+  round.style.backgroundColor = color.value;
+  lesson10.upPlane.material.color.setHex( color.value.replace('#','0x') );
+}
+
+function change2(){
+  var color = document.getElementById("DownColor");
+  var round = document.getElementById("round2");
+  round.style.backgroundColor = color.value;
+  lesson10.downPlane.material.color.setHex( color.value.replace('#','0x') );
+}
