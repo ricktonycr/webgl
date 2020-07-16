@@ -7,15 +7,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="css/main.css" rel="stylesheet" type="text/css" />
   </head>
-  <body style="height: 1000px;">
+  <body style="height: 1000px; background-color: #F8F8F8;">
     <script src="js/three.min.71.js"></script>
     <script src="js/THREEx.WindowResize.js"></script>
     <script src="js/OrbitControls.js"></script>
     <script src="js/stats.min.js"></script>
     <script src="js/script.js"></script>
-    <div style="margin: 0; padding: 0;width: 100%; display: flex;flex-direction: row;flex-wrap: nowrap;background-color: DodgerBlue;height: 100%;">
-      <div style="margin: 0; padding: 0;width: 30%; background-color: aqua;">
-        <div style="margin: 0; padding: 0;width: 100%; background-color:#F8F8F8; display: flex; flex-wrap: wrap;" id="1">
+    <header id="header">
+      <div class="left">
+        <img src="images/header.png" style="height: 100%;">
+        <input placeholder="¿Que estás buscando?" type="search" name="Search" id="search" class="search">
+      </div>
+      <div class="right">
+      </div>
+    </header>
+    <div style="width: 100%; display: flex;flex-direction: row;flex-wrap: nowrap;height: 100%;">
+      <div style="width: 30%;">
+        <div class="father" id="1">
           <div class="ItemDiv">
             <div class="OverImg">
               <img src="images/arc1.png" class="ItemImage" draggable="true"
@@ -103,7 +111,7 @@
                 data-size="4.0" 
                 data-url1="images/sofa1.png"
                 data-url2="images/sl2.png"
-                data-url3="images/sl3.png"
+                data-url3=""
                 data-name="Sofa"
                 data-price="1890,00"
                 data-mesures="80cm x 74cm x 70cm "
@@ -118,98 +126,22 @@
           </div>
         </div>
       </div>
-      <script>
-        function allowDrop(ev) {
-          ev.preventDefault();
-        }
-
-        function drag(ev) {
-          ev.dataTransfer.setData("text", ev.target.id);
-        }
-
-        function drop(ev) {
-          // Get mouse position
-          var mouseX = (ev.offsetX / ancho) * 2 - 1;
-          var mouseY = -(ev.offsetY / alto) * 2 + 1;
-
-
-          var mouse = new THREE.Vector2();
-          mouse.x = mouseX;
-          mouse.y = mouseY;
-          lesson10.raycaster.setFromCamera( mouse, lesson10.camera );
-          var intersects = lesson10.raycaster.intersectObject(lesson10.plane);
-
-          ev.preventDefault();
-          var data = {};
-          var Oid = ev.dataTransfer.getData("text");
-          var o = document.getElementById(Oid);
-          data.url1 = o.getAttribute("data-url1");
-          data.url2 = o.getAttribute("data-url2");
-          data.url3 = o.getAttribute("data-url3");
-          data.size = 0 + o.getAttribute("data-size");
-          data.name = o.getAttribute("data-name");
-          data.price = o.getAttribute("data-price");
-          data.mesures = o.getAttribute("data-mesures");
-          data.personalID = 0;
-          console.log(data.url1);
-          var object, material, radius;
-          
-          //var objGeometry = new THREE.BoxGeometry(10, 10, 1);
-          const loader = new THREE.TextureLoader();
-          const texture = loader.load(data.url1, function(texture){
-            var h = texture.image.height;
-            var w = texture.image.width;
-            var z = data.size;
-            //texture.minFilter = THREE.LinearFilter;
-            a = 10*z;
-            b = 10*z/h*w;
-            var objGeometry = new THREE.PlaneBufferGeometry(b, a, 8, 8);
-            material = new THREE.MeshPhongMaterial({color: 0x999999, map: texture,
-              alphaTest: 0.1,
-              transparent: true,
-              side: THREE.DoubleSide});
-            material.transparent = true;
-            object = new THREE.Mesh(objGeometry.clone(), material);
-            count = count + 1;
-            object.data = data;
-            object.data.personalID = count;
-
-            object.position.copy(intersects[0].point);
-
-            max = 4;
-            for (let index = 0; index < lesson10.objects.length; index++) {
-              const element = lesson10.objects[index];
-              if(element.position.z > max){
-                max = element.position.z;
-              } 
-            }
-            max = max + 1;
-            object.position.z = max;
-            console.log(object.position);
-            lesson10.objects.push(object);
-            // object.scale.x = 1.5;
-            // object.scale.y = 1.5;
-            // object.position.x = Math.random() * 50 - 25;
-            // object.position.y = Math.random() * 50 - 25;
-            // object.position.z = 400;
-
-            lesson10.scene.add(object);
-          },function(xhr){console.log( (xhr.loaded / xhr.total * 100) + '% loaded' )},function(xhr){console.log(xhr );});
-        }
-      </script>
-      <div style="margin: 0;width: 70%; background-color:beige; ">
-        <div id="container" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 600px;">
+      <script src="js/draganddrop.js"></script>
+      <div style="margin: 0;width: 70%; ">
+        <div id="container" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 800px;">
         </div>
         <script>
           var cont = document.getElementById("container");
           ancho = cont.offsetWidth;
           alto = cont.offsetHeight;
         </script>
-        <button onclick="compartir()">Compartir Diseño</button>
+        <button class="share" onclick="compartir()">Compartir Diseño</button>
         <span id="round1" class="round1" onclick="round1()"></span>
         <span id="round2" class="round2" onclick="round2()"></span>
         <input type="color" class="color1" name="UpColor" id="UpColor" onchange="change1()">
         <input type="color" class="color2" name="DownColor" id="DownColor" onchange="change2()">
+        <button class="mas" onclick="mas()">+</button>
+        <button class="menos" onclick="menos()">-</button>
       </div>
     </div>
   </body>

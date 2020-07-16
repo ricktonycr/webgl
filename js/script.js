@@ -124,44 +124,70 @@ var lesson10 = {
     };
 
     option1.onclick = function(){
-      if(selected != 1){
+      if(obj.data.selected != 1){
         var nSrc = obj.data.url1;
-        tx = THREE.ImageUtils.loadTexture( nSrc );
-        tx.minFilter = THREE.LinearFilter;
-        obj.material.map = tx;
-        obj.material.needsUpdate = true;
-        option1.style.borderColor = "white";
-        option2.style.borderColor = "#111111";
-        option3.style.borderColor = "#111111";
-        selected = 1;
+        var loader = new THREE.TextureLoader();
+        loader.load( nSrc, function(tx){
+          tx.minFilter = THREE.LinearFilter;
+          let h = tx.image.height;
+          let w = tx.image.width;
+          w = 10*obj.data.size/h*w;
+          h = 10*obj.data.size;
+          obj.scale.set(w,h,1);
+          obj.material.map = tx;
+          obj.material.needsUpdate = true;
+          option1.style.borderColor = "#111111";
+          option2.style.borderColor = "white";
+          option3.style.borderColor = "white";
+          obj.data.selected = 1;
+          refreshPanel();
+        },undefined,function(){} );
       }
     }
 
     option2.onclick = function(){
-      if(selected != 2){
+      if(obj.data.selected != 2){
         var nSrc = obj.data.url2;
-        tx = THREE.ImageUtils.loadTexture( nSrc );
-        tx.minFilter = THREE.LinearFilter;
-        obj.material.map = tx;
-        obj.material.needsUpdate = true;
-        option2.style.borderColor = "white";
-        option1.style.borderColor = "#111111";
-        option3.style.borderColor = "#111111";
-        selected = 2;
+        var loader = new THREE.TextureLoader();
+        loader.load( nSrc, function(tx){
+          tx.minFilter = THREE.LinearFilter;
+          console.log(tx.image);
+          let h = tx.image.height;
+          let w = tx.image.width;
+          w = 10*obj.data.size/h*w;
+          h = 10*obj.data.size;
+          obj.scale.set(w,h,1);
+          obj.material.map = tx;
+          obj.material.needsUpdate = true;
+          option2.style.borderColor = "#111111";
+          option1.style.borderColor = "white";
+          option3.style.borderColor = "white";
+          obj.data.selected = 2;
+          refreshPanel();
+        },undefined,function(){} );
+        
       }
     }
 
     option3.onclick = function(){
-      if(selected != 3){
+      if(obj.data.selected != 3){
         var nSrc = obj.data.url3;
-        tx = THREE.ImageUtils.loadTexture( nSrc );
-        tx.minFilter = THREE.LinearFilter;
-        obj.material.map = tx;
-        obj.material.needsUpdate = true;
-        option3.style.borderColor = "white";
-        option2.style.borderColor = "#111111";
-        option1.style.borderColor = "#111111";
-        selected = 3;
+        var loader = new THREE.TextureLoader();
+        loader.load( nSrc, function(tx){
+          tx.minFilter = THREE.LinearFilter;
+          let h = tx.image.height;
+          let w = tx.image.width;
+          w = 10*obj.data.size/h*w;
+          h = 10*obj.data.size;
+          obj.scale.set(w,h,1);
+          obj.material.map = tx;
+          obj.material.needsUpdate = true;
+          option3.style.borderColor = "#111111";
+          option2.style.borderColor = "white";
+          option1.style.borderColor = "white";
+          obj.data.selected = 3;
+          refreshPanel();
+        },undefined,function(){} );
       }
     }
 
@@ -351,92 +377,7 @@ var lesson10 = {
     // lesson10.controls.enabled = true;
     if(click && lesson10.selection){
       obj = lesson10.selection;
-      var vector = lesson10.selection.position.clone();
-      var box = new THREE.Box3().setFromObject( lesson10.selection );
-      var a = Math.abs(box.max.x - box.min.x);
-      var b = Math.abs(box.max.y - box.min.y);
-      vector.x = box.min.x;
-      vector.y = box.min.y;
-      vector.project(lesson10.camera);
-      vector.x = ( vector.x + 1) * ancho / 2;
-      vector.y = - ( vector.y - 1) * alto / 2;
-      vector.z = 0;
-      texto.style.top = (vector.y + lesson10.renderer.domElement.getBoundingClientRect().top + 5) + "px";
-      texto.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left - 10) + "px";
-      texto.style.zIndex = 1000;
-      var vector2 = lesson10.selection.position.clone();
-      vector2.x = box.max.x;
-      vector2.y = box.max.y;
-      vector2.project(lesson10.camera);
-      vector2.x = ( vector2.x + 1) * ancho / 2;
-      vector2.y = - ( vector2.y - 1) * alto / 2;
-      vector2.z = 0;
-      texto.style.width = (vector2.x - vector.x + 20) + "px";
-      texto.style.height = "auto";
-
-      l.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left - 10) + "px";
-      l.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top + vector2.y - 5) + "px";
-      l.style.width = "5px";
-      l.style.height = (vector.y - vector2.y + 10) + "px";
-      l.style.zIndex = 999;
-      t.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left - 10) + "px";
-      t.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 10) + "px";
-      t.style.height = "5px";
-      t.style.width = (vector2.x - vector.x + 20) + "px";
-      t.style.zIndex = 999;
-      r.style.left = (lesson10.renderer.domElement.getBoundingClientRect().left + vector2.x + 5) + "px";
-      r.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 5) + "px";
-      r.style.height = (vector.y - vector2.y + 10) + "px";
-      r.style.width = "5px";
-      r.style.zIndex = 999;
-      x.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 20) + "px";
-      x.style.left = (lesson10.renderer.domElement.getBoundingClientRect().left + vector2.x - 5) + "px";
-      x.style.width = "30px";
-      x.style.height = "30px";
-      x.style.zIndex = 1001;
-
-      nameO.innerHTML = obj.data.name;
-      size.innerHTML = obj.data.mesures;
-      price.innerHTML = "S/. " + obj.data.price;
-
-      if(obj.data.url1.length != 0){
-        option1.src = obj.data.url1;
-        option1.style.width = "40px";
-        option1.style.height = "40px";
-        option1.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 60) + "px";;
-        option1.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left - 10) + "px";;
-        option1.style.zIndex = 1000;
-        option1.style.backgroundColor = "white";
-        option1.style.borderStyle = "solid";
-        option1.style.borderWidth = "2px";
-        option1.style.borderColor = "white";
-      }
-
-      if(obj.data.url2.length != 0){
-        option2.src = obj.data.url2;
-        option2.style.width = "40px";
-        option2.style.height = "40px";
-        option2.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 60) + "px";;
-        option2.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left + 40) + "px";;
-        option2.style.zIndex = 1000;
-        option2.style.backgroundColor = "white";
-        option2.style.borderStyle = "solid";
-        option2.style.borderWidth = "2px";
-        option2.style.borderColor = "#111111";
-      }
-
-      if(obj.data.url3.length != 0){
-        option3.src = obj.data.url3;
-        option3.style.width = "40px";
-        option3.style.height = "40px";
-        option3.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 60) + "px";;
-        option3.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left + 90) + "px";;
-        option3.style.zIndex = 1000;
-        option3.style.backgroundColor = "white";
-        option3.style.borderStyle = "solid";
-        option3.style.borderWidth = "2px";
-        option3.style.borderColor = "#111111";
-      }
+      refreshPanel();
     }
     if(lesson10.selection)
       lesson10.selection.position.z=max;
@@ -444,6 +385,104 @@ var lesson10 = {
 
   }
 };
+
+function refreshPanel(){
+  var vector = obj.position.clone();
+  var box = new THREE.Box3().setFromObject( obj );
+  var a = Math.abs(box.max.x - box.min.x);
+  var b = Math.abs(box.max.y - box.min.y);
+  vector.x = box.min.x;
+  vector.y = box.min.y;
+  vector.project(lesson10.camera);
+  vector.x = ( vector.x + 1) * ancho / 2;
+  vector.y = - ( vector.y - 1) * alto / 2;
+  vector.z = 0;
+  texto.style.top = (vector.y + lesson10.renderer.domElement.getBoundingClientRect().top + 5) + "px";
+  texto.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left - 10) + "px";
+  texto.style.zIndex = 1000;
+  var vector2 = obj.position.clone();
+  vector2.x = box.max.x;
+  vector2.y = box.max.y;
+  vector2.project(lesson10.camera);
+  vector2.x = ( vector2.x + 1) * ancho / 2;
+  vector2.y = - ( vector2.y - 1) * alto / 2;
+  vector2.z = 0;
+  texto.style.width = (vector2.x - vector.x + 20) + "px";
+  texto.style.height = "auto";
+
+  l.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left - 10) + "px";
+  l.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top + vector2.y - 5) + "px";
+  l.style.width = "5px";
+  l.style.height = (vector.y - vector2.y + 10) + "px";
+  l.style.zIndex = 999;
+  t.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left - 10) + "px";
+  t.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 10) + "px";
+  t.style.height = "5px";
+  t.style.width = (vector2.x - vector.x + 20) + "px";
+  t.style.zIndex = 999;
+  r.style.left = (lesson10.renderer.domElement.getBoundingClientRect().left + vector2.x + 5) + "px";
+  r.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 5) + "px";
+  r.style.height = (vector.y - vector2.y + 10) + "px";
+  r.style.width = "5px";
+  r.style.zIndex = 999;
+  x.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 20) + "px";
+  x.style.left = (lesson10.renderer.domElement.getBoundingClientRect().left + vector2.x - 5) + "px";
+  x.style.width = "30px";
+  x.style.height = "30px";
+  x.style.zIndex = 1001;
+
+  nameO.innerHTML = obj.data.name;
+  size.innerHTML = obj.data.mesures;
+  price.innerHTML = "S/. " + obj.data.price;
+
+  if(obj.data.url1.length != 0){
+    option1.src = obj.data.url1;
+    option1.style.width = "40px";
+    option1.style.height = "40px";
+    option1.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 60) + "px";;
+    option1.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left - 10) + "px";;
+    option1.style.zIndex = 1000;
+    option1.style.backgroundColor = "white";
+    option1.style.borderStyle = "solid";
+    option1.style.borderWidth = "2px";
+    if(obj.data.selected == 1)
+      option1.style.borderColor = "#111111";
+    else
+      option1.style.borderColor = "white";
+  }
+
+  if(obj.data.url2.length != 0){
+    option2.src = obj.data.url2;
+    option2.style.width = "40px";
+    option2.style.height = "40px";
+    option2.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 60) + "px";;
+    option2.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left + 40) + "px";;
+    option2.style.zIndex = 1000;
+    option2.style.backgroundColor = "white";
+    option2.style.borderStyle = "solid";
+    option2.style.borderWidth = "2px";
+    if(obj.data.selected == 2)
+      option2.style.borderColor = "#111111";
+    else
+      option2.style.borderColor = "white";
+  }
+
+  if(obj.data.url3.length != 0){
+    option3.src = obj.data.url3;
+    option3.style.width = "40px";
+    option3.style.height = "40px";
+    option3.style.top = (lesson10.renderer.domElement.getBoundingClientRect().top  + vector2.y - 60) + "px";;
+    option3.style.left = (vector.x + lesson10.renderer.domElement.getBoundingClientRect().left + 90) + "px";;
+    option3.style.zIndex = 1000;
+    option3.style.backgroundColor = "white";
+    option3.style.borderStyle = "solid";
+    option3.style.borderWidth = "2px";
+    if(obj.data.selected == 3)
+      option3.style.borderColor = "#111111";
+    else
+      option3.style.borderColor = "white";
+  }
+}
 
 // Animate the scene
 function animate() {
@@ -529,4 +568,14 @@ function change2(){
   var round = document.getElementById("round2");
   round.style.backgroundColor = color.value;
   lesson10.downPlane.material.color.setHex( color.value.replace('#','0x') );
+}
+
+function mas(){
+  lesson10.camera.zoom = lesson10.camera.zoom + 0.1;
+  lesson10.camera.updateProjectionMatrix();
+}
+
+function menos(){
+  lesson10.camera.zoom = lesson10.camera.zoom - 0.1;
+  lesson10.camera.updateProjectionMatrix();
 }
