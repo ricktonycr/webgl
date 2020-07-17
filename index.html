@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="css/main.css" rel="stylesheet" type="text/css" />
   </head>
-  <body style="height: 1000px; background-color: #F8F8F8;">
+  <body style="height: 1000px; background-color: #F8F8F8;z-index: 0;">
     <script src="js/three.min.71.js"></script>
     <script src="js/THREEx.WindowResize.js"></script>
     <script src="js/OrbitControls.js"></script>
@@ -30,8 +30,10 @@
                 id="109" 
                 data-size="4.0" 
                 data-url1="images/arc1.png"
-                data-url2="images/sl2.png"
-                data-url3="images/sl3.png"
+                data-url2="images/arc2.png"
+                data-url3="images/arc3.png"
+                data-url4="images/arc4.png"
+                data-url5="images/arc5.png"
                 data-name="alfombra"
                 data-price="1890,00"
                 data-mesures="80cm x 74cm x 70cm "
@@ -50,8 +52,10 @@
                 id="110" 
                 data-size="7.0" 
                 data-url1="images/lamp.png"
-                data-url2="images/sl2.png"
-                data-url3="images/sl3.png"
+                data-url2="images/lamp1.png"
+                data-url3="images/lamp2.png"
+                data-url4="images/lamp3.png"
+                data-url5=""
                 data-name="lámpara"
                 data-price="1890,00"
                 data-mesures="80cm x 74cm x 70cm "
@@ -70,8 +74,10 @@
                 id="111" 
                 data-size="3.0" 
                 data-url1="images/plant.png"
-                data-url2="images/sl2.png"
-                data-url3="images/sl3.png"
+                data-url2="images/plant1.png"
+                data-url3="images/plant2.png"
+                data-url4=""
+                data-url5=""
                 data-name="Planta"
                 data-price="1890,00"
                 data-mesures="80cm x 74cm x 70cm "
@@ -90,8 +96,10 @@
                 id="112" 
                 data-size="4.0" 
                 data-url1="images/silla.png"
-                data-url2="images/sl2.png"
-                data-url3="images/sl3.png"
+                data-url2="images/silla1.png"
+                data-url3="images/silla2.png"
+                data-url4="images/silla3.png"
+                data-url5=""
                 data-name="Silla"
                 data-price="1890,00"
                 data-mesures="80cm x 74cm x 70cm "
@@ -110,8 +118,10 @@
                 id="113" 
                 data-size="4.0" 
                 data-url1="images/sofa1.png"
-                data-url2="images/sl2.png"
+                data-url2=""
                 data-url3=""
+                data-url4=""
+                data-url5=""
                 data-name="Sofa"
                 data-price="1890,00"
                 data-mesures="80cm x 74cm x 70cm "
@@ -127,7 +137,7 @@
         </div>
       </div>
       <script src="js/draganddrop.js"></script>
-      <div style="margin: 0;width: 70%; ">
+      <div style="margin: 0;width: 70%;border-style: unset;border-left-style: solid;border-left-width: 1px;border-left-color: #919191;">
         <div id="container" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 800px;">
         </div>
         <script>
