@@ -699,13 +699,13 @@ else if (window.attachEvent)
 else window.onload = initializeLesson;
 
 // Evento de selección de color 1
-function round1(){
+function circle1(){
   var color = document.getElementById("UpColor");
   color.click();
 }
 
 // Evento de selección de color 2
-function round2(){
+function circle2(){
   var color = document.getElementById("DownColor");
   color.click();
 }
@@ -713,7 +713,7 @@ function round2(){
 // Evento de cambio de color 1
 function change1(){
   var color = document.getElementById("UpColor");
-  var round = document.getElementById("round1");
+  var round = document.getElementById("circle1");
   round.style.backgroundColor = color.value;
   hall.upPlane.material.color.setHex( color.value.replace('#','0x') );
 }
@@ -721,20 +721,20 @@ function change1(){
 // Evento de cambio de color 2
 function change2(){
   var color = document.getElementById("DownColor");
-  var round = document.getElementById("round2");
+  var round = document.getElementById("circle2");
   round.style.backgroundColor = color.value;
   hall.downPlane.material.color.setHex( color.value.replace('#','0x') );
 }
 
 // Zoom in
-function mas(){
+function plus(){
   if(hall.camera.zoom <= 2.0)
     hall.camera.zoom = hall.camera.zoom + 0.1;
   hall.camera.updateProjectionMatrix();
 }
 
 // Zoom out
-function menos(){
+function minus(){
   if(hall.camera.zoom >= 0.5)
     hall.camera.zoom = hall.camera.zoom - 0.1;
   hall.camera.updateProjectionMatrix();
