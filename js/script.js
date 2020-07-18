@@ -30,6 +30,9 @@ var option3;
 var option4;
 var option5;
 
+// Borde límite de arrastre
+const limArr = 30;
+
 // Variable que define la opción selecionada
 var selected=0;
 
@@ -144,6 +147,8 @@ var hall = {
           // Cambio el tamaño de la malla y cambio la textura
           obj.scale.set(w,h,1);
           obj.material.map          = tx;
+          obj.material.alphaTest    = 0.1;
+          obj.material.transparent  = true;
           obj.material.needsUpdate  = true;
 
           // Modifico el borde de las opciones para diferenciar el seleccionado
@@ -177,6 +182,8 @@ var hall = {
           // Cambio el tamaño de la malla y cambio la textura
           obj.scale.set(w,h,1);
           obj.material.map         = tx;
+          obj.material.alphaTest   = 0.1;
+          obj.material.transparent = true;
           obj.material.needsUpdate = true;
 
           // Modifico el borde de las opciones para diferenciar el seleccionado
@@ -210,6 +217,8 @@ var hall = {
           // Cambio el tamaño de la malla y cambio la textura
           obj.scale.set(w,h,1);
           obj.material.map         = tx;
+          obj.material.alphaTest   = 0.1;
+          obj.material.transparent = true;
           obj.material.needsUpdate = true;
           
           // Modifico el borde de las opciones para diferenciar el seleccionado
@@ -243,6 +252,8 @@ var hall = {
           // Cambio el tamaño de la malla y cambio la textura
           obj.scale.set(w,h,1);
           obj.material.map         = tx;
+          obj.material.alphaTest   = 0.1;
+          obj.material.transparent = true;
           obj.material.needsUpdate = true;
 
           // Modifico el borde de las opciones para diferenciar el seleccionado
@@ -276,6 +287,8 @@ var hall = {
           // Cambio el tamaño de la malla y cambio la textura
           obj.scale.set(w,h,1);
           obj.material.map         = tx;
+          obj.material.alphaTest   = 0.1;
+          obj.material.transparent = true;
           obj.material.needsUpdate = true;
 
           // Modifico el borde de las opciones para diferenciar el seleccionado
@@ -368,40 +381,45 @@ var hall = {
 
   },
 
-  // Evento de 
+  // Evento de presión de mouse
   onDocumentMouseDown: function (event) {
-    // Get mouse position
+    
+    // Activar bandera para diferenciar click y arrastre
     click = true;
-    texto.style.display = "none";
-    l.style.display = "none";
-    r.style.display = "none";
-    t.style.display = "none";
-    x.style.display = "none";
-    options.style.display = "none";
-    obj = null;
 
+    // Esconder la interfaz
+    texto.style.display   = "none";
+    l.style.display       = "none";
+    r.style.display       = "none";
+    t.style.display       = "none";
+    x.style.display       = "none";
+    options.style.display = "none";
+    obj                   = null;
+
+    // Obtener posición del mouse
     var mouseX = (event.offsetX / ancho) * 2 - 1;
     var mouseY = -(event.offsetY / alto) * 2 + 1;
 
+    // Proyectar posición del mouse a un vector en el espacio de la escena
     var mouse = new THREE.Vector2();
-    mouse.x = mouseX;
-    mouse.y = mouseY;
+    mouse.x   = mouseX;
+    mouse.y   = mouseY;
     hall.raycaster.setFromCamera( mouse, hall.camera );
 
 
-    // Find all intersected objects
+    // Encontrar todos los objetos que intersectan con el vector
     var intersects = hall.raycaster.intersectObjects(hall.objects);
-    // console.log(intersects.length);
-    if (intersects.length > 0) {
-      // Disable the controls
-      //hall.controls.enabled = false;
 
-      // Set the selection - first intersected object
+    // Si hay objetos intersectados
+    if (intersects.length > 0) {
+
+      // Establecer la primera intersección
       hall.selection = intersects[0].object;
+
+      // Establecer la "altura" del elemento más alto
       max = 0;
       for (let index = 0; index < hall.objects.length; index++) {
         const element = hall.objects[index];
-        // console.log('->' + element.position.z);
         if(element.position.z > max){
           max = element.position.z;
         } 
@@ -409,126 +427,158 @@ var hall = {
       max = max + 1;
       hall.selection.position.z = max;
 
-      // Calculate the offset
+      // Calcular la diferencia entre el objeto intersectado y el plano auxiliar (centros)
       var intersects = hall.raycaster.intersectObject(hall.plane);
       hall.offset.copy(intersects[0].point).sub(hall.plane.position);
-
     }
   },
+
+  // Evento de movimiento de mouse
   onDocumentMouseMove: function (event) {
     event.preventDefault();
+
+    // Desactivo la bandera de click
     click = false;
     
-    if(event.offsetX < 30 || event.offsetY < 30){
+    // Detengo el arrastre de los objetos en el borde del canvas
+    if(event.offsetX < limArr || event.offsetY < limArr){
       hall.selection = null;
       return;
     }
-    if(event.offsetX > (ancho - 30) || event.offsetY > (alto - 30)){
+    if(event.offsetX > (ancho - limArr) || event.offsetY > (alto - limArr)){
       hall.selection = null;
       return;
     }
     
-    // Get mouse position
+    // Obtener posición del mouse
     var mouseX = (event.offsetX / ancho) * 2 - 1;
     var mouseY = -(event.offsetY / alto) * 2 + 1;
 
-
+    // Proyectar posición del mouse a un vector en el espacio de la escena
     var mouse = new THREE.Vector2();
-    mouse.x = mouseX;
-    mouse.y = mouseY;
+    mouse.x   = mouseX;
+    mouse.y   = mouseY;
     hall.raycaster.setFromCamera( mouse, hall.camera );
 
+    // Si existe un objeto intersectado
     if (hall.selection) {
-      // Check the position where the plane is intersected
+
+      // Verificar la intersección del vector con el plano auxiliar
       var intersects = hall.raycaster.intersectObject(hall.plane);
-      // Reposition the object based on the intersection point with the plane
+
+      // Mover el objeto según la diferencia calculada y lo llevo al tope entre objetos
       hall.selection.position.copy(intersects[0].point.sub(hall.offset));
       hall.selection.position.z=max;
-      // render();
-      // console.log(max);
+    
     } else {
-      // Update position of the plane if need
+
+      // Actualizo pa posición del plano auxiliar
       var intersects = hall.raycaster.intersectObjects(hall.objects);
       if (intersects.length > 0) {
         hall.plane.position.copy(intersects[0].object.position);
         hall.plane.position.z = 0;
-        var v = intersects[0].object.position;
-        // v.z = 0;
+        var v                 = intersects[0].object.position;
         hall.plane.lookAt(v);
       }
     }
   },
+
+  // Evento de levantado de mouse
   onDocumentMouseUp: function (event) {
-    // Enable the controls
-    // hall.controls.enabled = true;
+    
+    // Si es click y hay objeto seleccionado
     if(click && hall.selection){
+
+      // Se establece objeto temporal
       obj = hall.selection;
+
+      // Se actualiza la interfaz
       refreshPanel();
     }
-    if(hall.selection)
-      hall.selection.position.z=max;
+
+    // Si hay objeto seleccionado
+    if(hall.selection){
+
+      // Se pone el objeto al tope
+      hall.selection.position.z = max;
+    }
+
+    // Se borra el objeto seleccionado
     hall.selection = null;
 
   }
 };
 
+// Actualización de interfaz
 function refreshPanel(){
+
+  // Obtengo la proyección de la posición del objeto
   var vector = obj.position.clone();
-  var box = new THREE.Box3().setFromObject( obj );
-  var a = Math.abs(box.max.x - box.min.x);
-  var b = Math.abs(box.max.y - box.min.y);
-  vector.x = box.min.x;
-  vector.y = box.min.y;
+  var box    = new THREE.Box3().setFromObject( obj );
+  var a      = Math.abs(box.max.x - box.min.x);
+  var b      = Math.abs(box.max.y - box.min.y);
+  vector.x   = box.min.x;
+  vector.y   = box.min.y;
   vector.project(hall.camera);
   vector.x = ( vector.x + 1) * ancho / 2;
   vector.y = - ( vector.y - 1) * alto / 2;
   vector.z = 0;
-  texto.style.top = (vector.y + hall.renderer.domElement.getBoundingClientRect().top + 5) + "px";
-  texto.style.left = (vector.x + hall.renderer.domElement.getBoundingClientRect().left - 10) + "px";
+
+  // Establezco la posición absoluta de la caja de texto
+  texto.style.top     = (vector.y + hall.renderer.domElement.getBoundingClientRect().top + 5) + "px";
+  texto.style.left    = (vector.x + hall.renderer.domElement.getBoundingClientRect().left - 10) + "px";
   texto.style.display = "block";
+
+  // Obtengo la proyección del tamaño del objeto
   var vector2 = obj.position.clone();
-  vector2.x = box.max.x;
-  vector2.y = box.max.y;
+  vector2.x   = box.max.x;
+  vector2.y   = box.max.y;
   vector2.project(hall.camera);
   vector2.x = ( vector2.x + 1) * ancho / 2;
-  vector2.y = - ( vector2.y - 1) * alto / 2;
+  vector2.y = -( vector2.y - 1) * alto / 2;
   vector2.z = 0;
+
+  // Establezco el ancho y alto de la caja de texto
   texto.style.width = (vector2.x - vector.x + 20) + "px";
   texto.style.height = "auto";
 
-  l.style.left = (vector.x + hall.renderer.domElement.getBoundingClientRect().left - 10) + "px";
-  l.style.top = (hall.renderer.domElement.getBoundingClientRect().top + vector2.y - 5) + "px";
-  l.style.width = "5px";
-  l.style.height = (vector.y - vector2.y + 10) + "px";
+  // Establezco la posición absoluta de los bordes de la interfaz
+  l.style.left    = (vector.x + hall.renderer.domElement.getBoundingClientRect().left - 10) + "px";
+  l.style.top     = (hall.renderer.domElement.getBoundingClientRect().top + vector2.y - 5) + "px";
+  l.style.width   = "5px";
+  l.style.height  = (vector.y - vector2.y + 10) + "px";
   l.style.display = "block";
-  t.style.left = (vector.x + hall.renderer.domElement.getBoundingClientRect().left - 10) + "px";
-  t.style.top = (hall.renderer.domElement.getBoundingClientRect().top  + vector2.y - 10) + "px";
-  t.style.height = "5px";
-  t.style.width = (vector2.x - vector.x + 20) + "px";
+  t.style.left    = (vector.x + hall.renderer.domElement.getBoundingClientRect().left - 10) + "px";
+  t.style.top     = (hall.renderer.domElement.getBoundingClientRect().top  + vector2.y - 10) + "px";
+  t.style.height  = "5px";
+  t.style.width   = (vector2.x - vector.x + 20) + "px";
   t.style.display = "block";
-  r.style.left = (hall.renderer.domElement.getBoundingClientRect().left + vector2.x + 5) + "px";
-  r.style.top = (hall.renderer.domElement.getBoundingClientRect().top  + vector2.y - 5) + "px";
-  r.style.height = (vector.y - vector2.y + 10) + "px";
-  r.style.width = "5px";
+  r.style.left    = (hall.renderer.domElement.getBoundingClientRect().left + vector2.x + 5) + "px";
+  r.style.top     = (hall.renderer.domElement.getBoundingClientRect().top  + vector2.y - 5) + "px";
+  r.style.height  = (vector.y - vector2.y + 10) + "px";
+  r.style.width   = "5px";
   r.style.display = "block";
-  x.style.top = (hall.renderer.domElement.getBoundingClientRect().top  + vector2.y - 20) + "px";
-  x.style.left = (hall.renderer.domElement.getBoundingClientRect().left + vector2.x - 5) + "px";
-  x.style.width = "30px";
-  x.style.height = "30px";
+  x.style.top     = (hall.renderer.domElement.getBoundingClientRect().top  + vector2.y - 20) + "px";
+  x.style.left    = (hall.renderer.domElement.getBoundingClientRect().left + vector2.x - 5) + "px";
+  x.style.width   = "30px";
+  x.style.height  = "30px";
   x.style.display = "block";
 
+  // Establezco el texto a mostrar
   nameO.innerHTML = obj.data.name;
-  size.innerHTML = obj.data.mesures;
+  size.innerHTML  = obj.data.mesures;
   price.innerHTML = "S/. " + obj.data.price;
 
+  // Establezco los parámetros de la caja de opciones
   options.style.display = "block";
-  options.style.top = (hall.renderer.domElement.getBoundingClientRect().top  + vector2.y - 60) + "px";
-  options.style.left = (vector.x + hall.renderer.domElement.getBoundingClientRect().left - 10) + "px";
-  options.style.height = "40px";
-  options.style.width = "auto";
+  options.style.top     = (hall.renderer.domElement.getBoundingClientRect().top  + vector2.y - 60) + "px";
+  options.style.left    = (vector.x + hall.renderer.domElement.getBoundingClientRect().left - 10) + "px";
+  options.style.height  = "40px";
+  options.style.width   = "auto";
 
+  // Si la URL de la primera opción no es vacía se carga la imagen
   if(obj.data.url1.length != 0){
-    option1.src = obj.data.url1;
+    option1.src           = obj.data.url1;
     option1.style.display = "inline";
     if(obj.data.selected == 1)
       option1.style.borderColor = "#111111";
@@ -538,8 +588,9 @@ function refreshPanel(){
     option1.style.display = "none";
   }
 
+  // Si la URL de la segunda opción no es vacía se carga la imagen
   if(obj.data.url2.length != 0){
-    option2.src = obj.data.url2;
+    option2.src           = obj.data.url2;
     option2.style.display = "inline";
     if(obj.data.selected == 2)
       option2.style.borderColor = "#111111";
@@ -549,8 +600,9 @@ function refreshPanel(){
     option2.style.display = "none";
   }
 
+  // Si la URL de la tercera opción no es vacía se carga la imagen
   if(obj.data.url3.length != 0){
-    option3.src = obj.data.url3;
+    option3.src           = obj.data.url3;
     option3.style.display = "inline";
     if(obj.data.selected == 3)
       option3.style.borderColor = "#111111";
@@ -560,8 +612,9 @@ function refreshPanel(){
     option3.style.display = "none";
   }
 
+  // Si la URL de la cuarta opción no es vacía se carga la imagen
   if(obj.data.url4.length != 0){
-    option4.src = obj.data.url4;
+    option4.src           = obj.data.url4;
     option4.style.display = "inline";
     if(obj.data.selected == 4)
       option4.style.borderColor = "#111111";
@@ -571,6 +624,7 @@ function refreshPanel(){
     option4.style.display = "none";
   }
 
+  // Si la URL de la quinta opción no es vacía se carga la imagen
   if(obj.data.url5.length != 0){
     option5.src = obj.data.url5;
     option5.style.display = "inline";
@@ -583,34 +637,32 @@ function refreshPanel(){
   }
 }
 
-// Animate the scene
+// Animar la escena
 function animate() {
   requestAnimationFrame(animate);
   render();
   update();
 }
 
-// Update controls and stats
+// Actualizar el reloj
 function update() {
   var delta = hall.clock.getDelta();
-
-  //hall.controls.update(delta);
-  // hall.stats.update();
 }
 
-// Render the scene
+// Renderizar la escena
 function render() {
   if (hall.renderer) {
     hall.renderer.render(hall.scene, hall.camera);
   }
 }
 
-// Initialize lesson on page load
+// Inicializar el canvas
 function initializeLesson() {
   hall.init();
   animate();
 }
 
+// Compartir captura del canvas
 function compartir(){
   var imgData, imgNode;
   try {
@@ -625,36 +677,40 @@ function compartir(){
   }
 }
 
+// Guardar archivo (Descargar)
 var saveFile = function (strData, filename) {
   var link = document.createElement('a');
   if (typeof link.download === 'string') {
-    document.body.appendChild(link); //Firefox requires the link to be in the body
+    document.body.appendChild(link); //Firefox requiere que el link se encuentre en el body
     link.download = filename;
     link.href = strData;
     link.click();
-    document.body.removeChild(link); //remove the link when done
+    document.body.removeChild(link); //Removemos el link cuando todo está OK
   } else {
     location.replace(uri);
   }
 }
 
+// Establecemos el listener de inicio
 if (window.addEventListener)
   window.addEventListener('load', initializeLesson, false);
 else if (window.attachEvent)
   window.attachEvent('onload', initializeLesson);
 else window.onload = initializeLesson;
 
-
+// Evento de selección de color 1
 function round1(){
   var color = document.getElementById("UpColor");
   color.click();
 }
 
+// Evento de selección de color 2
 function round2(){
   var color = document.getElementById("DownColor");
   color.click();
 }
 
+// Evento de cambio de color 1
 function change1(){
   var color = document.getElementById("UpColor");
   var round = document.getElementById("round1");
@@ -662,6 +718,7 @@ function change1(){
   hall.upPlane.material.color.setHex( color.value.replace('#','0x') );
 }
 
+// Evento de cambio de color 2
 function change2(){
   var color = document.getElementById("DownColor");
   var round = document.getElementById("round2");
@@ -669,12 +726,14 @@ function change2(){
   hall.downPlane.material.color.setHex( color.value.replace('#','0x') );
 }
 
+// Zoom in
 function mas(){
   if(hall.camera.zoom <= 2.0)
     hall.camera.zoom = hall.camera.zoom + 0.1;
   hall.camera.updateProjectionMatrix();
 }
 
+// Zoom out
 function menos(){
   if(hall.camera.zoom >= 0.5)
     hall.camera.zoom = hall.camera.zoom - 0.1;
