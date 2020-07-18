@@ -59,5 +59,6 @@ Atributos necesarios:
 - **circle2()**: Al ser ejecutado, llama a la función click del elemento tipo input color con ID *DownColor*, se puede incluir en el evento *onclick* de cualquier elemento HTML(este elemento debe tener ID *circle2*).
 - **change1()**: Cambia el color del fondo superior de la escena, y cambia el *backgroundColor* del elemento con ID *circle1*, Se debe incluir en el evento *onchange* de un elemento HTML de tipo input color(este elemento debe tener ID *UpColor*).
 - **change2()**: Cambia el color del fondo superior de la escena, y cambia el *backgroundColor* del elemento con ID *circle2*, Se debe incluir en el evento *onchange* de un elemento HTML de tipo input color(este elemento debe tener ID *DownColor*).
+- **compartir()**: Descarga una captura de la escena actual, se puede incluir en el evento *onclick* de cualquier elemento HTML.
 
 >**NOTA:** Tanto los objetos de ID *circle1* con *UpColor* y *circle2* con *DownColor*, debn ser posicionados de la misma manera, para tener un comportamiento óptimo.
