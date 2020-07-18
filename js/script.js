@@ -355,11 +355,11 @@ var hall = {
     this.clock = new THREE.Clock();
 
     // Se añaden luces a la escena
-    this.scene.add( new THREE.AmbientLight(0x444444));
-    var dirLight = new THREE.DirectionalLight(0xffffff);
-    dirLight.position.set(200, 200, 1000).normalize();
-    this.camera.add(dirLight);
-    this.camera.add(dirLight.target);
+    this.scene.add( new THREE.AmbientLight(0xffffff,0.5));
+    // var dirLight = new THREE.DirectionalLight(0xbbbbbb);
+    // dirLight.position.set(0, 0, 100000).normalize();
+    // this.camera.add(dirLight);
+    // this.camera.add(dirLight.target);
 
     // Se añade plano que nos ayudará a establecer el movimiento de los objetos
     this.plane         = new THREE.Mesh(new THREE.PlaneBufferGeometry(2000, 2000, 1, 1), new THREE.MeshBasicMaterial({color: 0xffffff}));

@@ -48,7 +48,7 @@ function drop(ev) {
 
     // Establecemos las dimensiones de la malla en 1 para poder manejar el zoom in/zoom out en perspectiva Ortográfica
     var objGeometry = new THREE.PlaneBufferGeometry(1, 1, 8, 8);
-    material        = new THREE.MeshPhongMaterial({color: 0x999999, map: texture,
+    material        = new THREE.MeshLambertMaterial({color: 0xeeeeee, map: texture,
       alphaTest: 0.1,
       transparent: true,
       side: THREE.DoubleSide});
