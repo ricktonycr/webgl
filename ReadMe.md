@@ -62,3 +62,10 @@ Atributos necesarios:
 - **compartir()**: Descarga una captura de la escena actual, se puede incluir en el evento *onclick* de cualquier elemento HTML.
 
 >**NOTA:** Tanto los objetos de ID *circle1* con *UpColor* y *circle2* con *DownColor*, debn ser posicionados de la misma manera, para tener un comportamiento óptimo.
+
+## Instalación (Opcional)
+Para una visualización rápida, instalar *docker* y *docker-compose*, ejecutar el siguiente comando:
+```ssh
+docker-compose up
+```
+y se ejecutará un servidor lightweight(nginx:1.15.8 sobre alpine), accediendo a la página *localhost*.
