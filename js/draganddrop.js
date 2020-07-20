@@ -36,6 +36,8 @@ function drop(ev) {
   data.price      = o.getAttribute("data-price");
   data.mesures    = o.getAttribute("data-mesures");
   data.personalID = 0;
+  data.id         = Oid;
+
 
   // Creamos el nuevo objeto Three y el material a utilizar con textura de la imagen arrastrada
   var object, material, radius;
@@ -98,4 +100,35 @@ function drop(ev) {
 
   // Se establecen dos funciones de retorno: carga de textura(aún no soportado por Threejs) y si ocurrió un error al cargar la textura
   },function(xhr){console.log( (xhr.loaded / xhr.total * 100) + '% loaded' )},function(xhr){console.log(xhr );});
+
+  // Agregar a la lista de detalles
+  var lista = document.getElementById("lista");
+  var item  = document.createElement("div");
+  item.classList.add("itemList");
+  item.id = "e" + Oid;
+  var part1 = document.createElement("div");
+  part1.classList.add("part1");
+  var limg = document.createElement("img");
+  limg.src = o.src;
+  part1.appendChild(limg);
+  item.appendChild(part1);
+  var part2 = document.createElement("div");
+  part2.classList.add("part2");
+  var nombre = document.createElement("p");
+  nombre.innerHTML = data.name;
+  part2.appendChild(nombre);
+  var mesures = document.createElement("p");
+  mesures.innerHTML = data.mesures;
+  part2.appendChild(mesures);
+  item.appendChild(part2);
+  var part3 = document.createElement("div");
+  part3.classList.add("part3");
+  var price = document.createElement("p");
+  price.innerHTML = data.price;
+  part3.appendChild(price);
+  var other = document.createElement("p");
+  other.innerHTML = "disponible en Arequipa";
+  part3.appendChild(other);
+  item.appendChild(part3);
+  lista.appendChild(item);
 }

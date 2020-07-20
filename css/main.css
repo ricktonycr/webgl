@@ -3,7 +3,7 @@
   padding: 0;
 }
 html {
-  overflow: hidden;
+  overflow: auto;
 }
 
 .ItemImage{
@@ -152,4 +152,26 @@ html {
   border-style: solid;
   border-width: 2px;
   margin-right: 5px;
+}
+
+.store{
+  width: 90%;
+  height: 60px;
+  position: relative;
+  top: 20px;
+  left: 20px;
+  background-color: white;
+  box-shadow: 2px 3px 6px 0px #484848;
+}
+
+#container{
+  margin-top: -60px;
+}
+
+.itemList{
+  display: inline;
+}
+
+#lista{
+  display: inline;
 }

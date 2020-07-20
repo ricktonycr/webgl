@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="css/main.css" rel="stylesheet" type="text/css" />
   </head>
-  <body style="height: 1000px; background-color: #F8F8F8;z-index: 0;">
+  <body style="background-color: #F8F8F8;z-index: 0;overflow: auto;">
     <script src="js/three.min.71.js"></script>
     <script src="js/THREEx.WindowResize.js"></script>
     <script src="js/OrbitControls.js"></script>
@@ -21,7 +21,7 @@
       <div class="right">
       </div>
     </header>
-    <div style="width: 100%; display: flex;flex-direction: row;flex-wrap: nowrap;height: 100%;">
+    <div style="width: 100%; display: flex;flex-direction: row;flex-wrap: nowrap;">
       <div style="width: 30%;">
         <div class="father" id="1">
           <div class="ItemDiv">
@@ -128,6 +128,15 @@
       </div>
       <script src="js/draganddrop.js"></script>
       <div style="margin: 0;width: 70%;border-style: unset;border-left-style: solid;border-left-width: 1px;border-left-color: #919191;">
+        <div class="store">
+          <img src="" alt="">
+          <span>Carrito de compras</span>
+          <a href="#detalles">
+            <span>5 elementos (Ver detalles)</span>
+          </a>
+          <span>Total: S/. 3567.60</span>
+          <button>Comprar</button>
+        </div>
         <div id="container" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 800px;">
         </div>
         <script>
@@ -143,6 +152,11 @@
         <input type="color" class="color2" name="DownColor" id="DownColor" onchange="change2()">
         <button class="mas" onclick="plus()">+</button>
         <button class="menos" onclick="minus()">-</button>
+        <div id="detalles">
+          <p>Detalles</p>
+          <div id="lista">
+          </div>
+        </div>
       </div>
     </div>
   </body>

@@ -126,6 +126,13 @@ var hall = {
       r.style.display       = "none";
       x.style.display       = "none";
       options.style.display = "none";
+
+      // Elimino de la lista
+      var id = "e" + obj.data.id;
+      console.log(id);
+      var eList = document.getElementById(id);
+      console.log(eList);
+      eList.remove();
     };
 
     // Comportamiento al hacer click en la primera opción
@@ -525,7 +532,7 @@ function refreshPanel(){
   vector.z = 0;
 
   // Establezco la posición absoluta de la caja de texto
-  texto.style.top     = (vector.y + hall.renderer.domElement.getBoundingClientRect().top + 5) + "px";
+  texto.style.top     = (vector.y + window.scrollY + hall.renderer.domElement.getBoundingClientRect().top + 5) + "px";
   texto.style.left    = (vector.x + hall.renderer.domElement.getBoundingClientRect().left - 10) + "px";
   texto.style.display = "block";
 
@@ -544,21 +551,21 @@ function refreshPanel(){
 
   // Establezco la posición absoluta de los bordes de la interfaz
   l.style.left    = (vector.x + hall.renderer.domElement.getBoundingClientRect().left - 10) + "px";
-  l.style.top     = (hall.renderer.domElement.getBoundingClientRect().top + vector2.y - 5) + "px";
+  l.style.top     = (hall.renderer.domElement.getBoundingClientRect().top + window.scrollY + vector2.y - 5) + "px";
   l.style.width   = "5px";
   l.style.height  = (vector.y - vector2.y + 10) + "px";
   l.style.display = "block";
   t.style.left    = (vector.x + hall.renderer.domElement.getBoundingClientRect().left - 10) + "px";
-  t.style.top     = (hall.renderer.domElement.getBoundingClientRect().top  + vector2.y - 10) + "px";
+  t.style.top     = (hall.renderer.domElement.getBoundingClientRect().top + window.scrollY  + vector2.y - 10) + "px";
   t.style.height  = "5px";
   t.style.width   = (vector2.x - vector.x + 20) + "px";
   t.style.display = "block";
   r.style.left    = (hall.renderer.domElement.getBoundingClientRect().left + vector2.x + 5) + "px";
-  r.style.top     = (hall.renderer.domElement.getBoundingClientRect().top  + vector2.y - 5) + "px";
+  r.style.top     = (hall.renderer.domElement.getBoundingClientRect().top + window.scrollY  + vector2.y - 5) + "px";
   r.style.height  = (vector.y - vector2.y + 10) + "px";
   r.style.width   = "5px";
   r.style.display = "block";
-  x.style.top     = (hall.renderer.domElement.getBoundingClientRect().top  + vector2.y - 20) + "px";
+  x.style.top     = (hall.renderer.domElement.getBoundingClientRect().top + window.scrollY  + vector2.y - 20) + "px";
   x.style.left    = (hall.renderer.domElement.getBoundingClientRect().left + vector2.x - 5) + "px";
   x.style.width   = "30px";
   x.style.height  = "30px";
@@ -571,7 +578,7 @@ function refreshPanel(){
 
   // Establezco los parámetros de la caja de opciones
   options.style.display = "block";
-  options.style.top     = (hall.renderer.domElement.getBoundingClientRect().top  + vector2.y - 60) + "px";
+  options.style.top     = (hall.renderer.domElement.getBoundingClientRect().top + window.scrollY  + vector2.y - 60) + "px";
   options.style.left    = (vector.x + hall.renderer.domElement.getBoundingClientRect().left - 10) + "px";
   options.style.height  = "40px";
   options.style.width   = "auto";
