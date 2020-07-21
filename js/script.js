@@ -1,6 +1,10 @@
 // máxima altura para los objetos(mayor altura más cerca a la cámara)
 var max = 0;
 
+// cantidades
+var cantidad = 0;
+var monto    = 0;
+
 //Flag para diferenciar un click y un arrastre
 var click = false;
 
@@ -133,6 +137,14 @@ var hall = {
       var eList = document.getElementById(id);
       console.log(eList);
       eList.remove();
+
+      // Restamos
+      cantidad -= 1;
+      monto    -= parseFloat(obj.data.price);
+      var cantidadE = document.getElementById("cantidad");
+      cantidadE.innerHTML = cantidad + " elementos (Ver detalles)";
+      var montoE = document.getElementById("monto");
+      montoE.innerHTML = "Total: S/. " + Math.abs(monto.toFixed(2));
     };
 
     // Comportamiento al hacer click en la primera opción

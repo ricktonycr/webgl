@@ -159,7 +159,7 @@ html {
   height: 60px;
   position: relative;
   top: 20px;
-  left: 20px;
+  left: 30px;
   background-color: white;
   box-shadow: 2px 3px 6px 0px #484848;
 }
@@ -169,9 +169,44 @@ html {
 }
 
 .itemList{
-  display: inline;
+  display: block;
+  height: 100px;
+  border-bottom-style: solid;
+  border-bottom-color: #E9E9E9;
+  border-bottom-width: 2px;
 }
 
 #lista{
   display: inline;
+}
+
+.part1{
+  height: 100%;
+  width: 100px;
+  display: inline-block;
+}
+
+.part1 img{
+  margin-top: 10px;
+  margin-left: 10px;
+  max-width: 80px;
+  max-height: 80px;
+  background-color: white;
+}
+
+.part2{
+  display: inline-block;
+  vertical-align: top;
+  vertical-align: top;
+  padding-top: 10px;
+  padding-left: 40px;
+  color: #787878;
+}
+
+.part3{
+  display: inline-block;
+  vertical-align: top;
+  float: right;
+  padding-top: 10px;
+  padding-right: 33px;
 }

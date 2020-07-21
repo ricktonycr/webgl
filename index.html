@@ -35,7 +35,7 @@
                 data-url4="images/arc4.png"
                 data-url5="images/arc5.png"
                 data-name="alfombra"
-                data-price="1890,00"
+                data-price="1890.00"
                 data-mesures="80cm x 74cm x 70cm "
                 ondragstart="drag(event)">
             </div>
@@ -55,7 +55,7 @@
                 data-url4="images/lamp3.png"
                 data-url5=""
                 data-name="lámpara"
-                data-price="1890,00"
+                data-price="1890.00"
                 data-mesures="80cm x 74cm x 70cm "
                 ondragstart="drag(event)">
             </div>
@@ -75,7 +75,7 @@
                 data-url4=""
                 data-url5=""
                 data-name="Planta"
-                data-price="1890,00"
+                data-price="1890.00"
                 data-mesures="80cm x 74cm x 70cm "
                 ondragstart="drag(event)">
             </div>
@@ -95,7 +95,7 @@
                 data-url4="images/silla3.png"
                 data-url5=""
                 data-name="Silla"
-                data-price="1890,00"
+                data-price="1890.00"
                 data-mesures="80cm x 74cm x 70cm "
                 ondragstart="drag(event)">
             </div>
@@ -115,7 +115,7 @@
                 data-url4=""
                 data-url5=""
                 data-name="Sofa"
-                data-price="1890,00"
+                data-price="1890.20"
                 data-mesures="80cm x 74cm x 70cm "
                 ondragstart="drag(event)">
             </div>
@@ -130,12 +130,14 @@
       <div style="margin: 0;width: 70%;border-style: unset;border-left-style: solid;border-left-width: 1px;border-left-color: #919191;">
         <div class="store">
           <img src="" alt="">
-          <span>Carrito de compras</span>
-          <a href="#detalles">
-            <span>5 elementos (Ver detalles)</span>
+          <span style="display: inline-block;margin-top: 20px;margin-right: 63px;">Carrito de compras</span>
+          <a href="#detalles" style="text-decoration: none;color: black;">
+            <span id="cantidad">0 elementos (Ver detalles)</span>
           </a>
-          <span>Total: S/. 3567.60</span>
-          <button>Comprar</button>
+          <div style="display: inline-block;margin-left: 560px;">
+            <span id="monto">Total: S/. 0.00</span>
+            <button style="width: 83px;height: 35px;border-radius: 6px;border: none;background-color: #81BE09;color: white;font-weight: 900;margin-left: 33px;">Comprar</button>
+          </div>
         </div>
         <div id="container" ondrop="drop(event)" ondragover="allowDrop(event)" style="height: 800px;">
         </div>
@@ -153,7 +155,7 @@
         <button class="mas" onclick="plus()">+</button>
         <button class="menos" onclick="minus()">-</button>
         <div id="detalles">
-          <p>Detalles</p>
+          <p style="margin-top: 19px;margin-left: 20px;font-size: 21px;font-weight: 900;margin-bottom: 20px;">Detalles</p>
           <div id="lista">
           </div>
         </div>

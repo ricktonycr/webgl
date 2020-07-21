@@ -38,6 +38,14 @@ function drop(ev) {
   data.personalID = 0;
   data.id         = Oid;
 
+  // Sumamos
+  cantidad += 1;
+  monto    += parseFloat(data.price);
+  var cantidadE = document.getElementById("cantidad");
+  cantidadE.innerHTML = cantidad + " elementos (Ver detalles)";
+  var montoE = document.getElementById("monto");
+  montoE.innerHTML = "Total: S/. " + Math.abs(monto.toFixed(2));
+
 
   // Creamos el nuevo objeto Three y el material a utilizar con textura de la imagen arrastrada
   var object, material, radius;
