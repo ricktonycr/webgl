@@ -138,7 +138,7 @@ var hall = {
       console.log(eList);
       eList.remove();
 
-      // Restamos
+      // Restamos (Se recomienda realizar todos los calculos en servidor, esto sólo debería mostrar la información ya procesada)
       cantidad -= 1;
       monto    -= parseFloat(obj.data.price);
       var cantidadE = document.getElementById("cantidad");

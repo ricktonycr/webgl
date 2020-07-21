@@ -38,7 +38,7 @@ function drop(ev) {
   data.personalID = 0;
   data.id         = Oid;
 
-  // Sumamos
+  // Sumamos (Se recomienda realizar todos los calculos en servidor, esto sólo debería mostrar la información ya procesada)
   cantidad += 1;
   monto    += parseFloat(data.price);
   var cantidadE = document.getElementById("cantidad");
@@ -109,7 +109,7 @@ function drop(ev) {
   // Se establecen dos funciones de retorno: carga de textura(aún no soportado por Threejs) y si ocurrió un error al cargar la textura
   },function(xhr){console.log( (xhr.loaded / xhr.total * 100) + '% loaded' )},function(xhr){console.log(xhr );});
 
-  // Agregar a la lista de detalles
+  // Agregar a la lista de detalles (Se recomienda realizar el agregado al carrito en servidor, aquí sólo debería mostrar lo ya procesado)
   var lista = document.getElementById("lista");
   var item  = document.createElement("div");
   item.classList.add("itemList");
